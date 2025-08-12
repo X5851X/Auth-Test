@@ -1,0 +1,63 @@
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: auth_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: auth_db
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+    networks:
+      - auth_network
+
+  backend:
+    build: ./backend
+    container_name: auth_backend
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_USERNAME=root
+      - DB_PASSWORD=password
+      - DB_NAME=auth_db
+      - JWT_SECRET=your-super-secret-jwt-key-here-change-in-production
+      - CORS_ORIGIN=http://localhost:3000
+      - PORT=3001
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - auth_network
+
+  frontend:
+    build: ./frontend
+    container_name: auth_frontend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - API_BASE_URL=http://localhost:3001
+      - NUXT_HOST=0.0.0.0
+      - NUXT_PORT=3000
+    depends_on:
+      - backend
+    networks:
+      - auth_network
+
+volumes:
+  mysql_data:
+
+networks:
+  auth_network:
+    driver: bridge

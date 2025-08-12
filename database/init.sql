@@ -1,0 +1,13 @@
+CREATE DATABASE IF NOT EXISTS auth_db;
+USE auth_db;
+
+CREATE TABLE IF NOT EXISTS users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  password VARCHAR(255),
+  googleId VARCHAR(255) NULL,
+  facebookId VARCHAR(255) NULL,
+  provider ENUM('local', 'google', 'facebook') DEFAULT 'local',
+  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

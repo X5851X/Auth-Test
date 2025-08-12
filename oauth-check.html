@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OAuth Debug</title>
+</head>
+<body>
+    <h2>OAuth Debug Test</h2>
+    
+    <h3>Manual Test Links:</h3>
+    <p><a href="http://localhost:3001/auth/google" target="_blank">Test Google OAuth</a></p>
+    <p><a href="http://localhost:3001/auth/facebook" target="_blank">Test Facebook OAuth</a></p>
+    
+    <h3>Required Settings:</h3>
+    <h4>Google Console (console.developers.google.com):</h4>
+    <ul>
+        <li>Client ID: 19302358821-kvh2sd6ipfddhmfe7oekjpk90f0lbvic.apps.googleusercontent.com</li>
+        <li>Authorized redirect URIs: http://localhost:3001/auth/google/callback</li>
+        <li>Authorized JavaScript origins: http://localhost:3000, http://localhost:3001</li>
+    </ul>
+    
+    <h4>Facebook Console (developers.facebook.com):</h4>
+    <ul>
+        <li>App ID: 1281670323679513</li>
+        <li>Valid OAuth Redirect URIs: http://localhost:3001/auth/facebook/callback</li>
+        <li>App Domain: localhost</li>
+    </ul>
+    
+    <script>
+        console.log('Testing OAuth endpoints...');
+        
+        // Test if backend is running
+        fetch('http://localhost:3001/auth/google')
+            .then(response => {
+                console.log('Google endpoint status:', response.status);
+                if (response.status === 302) {
+                    console.log('✅ Google OAuth redirect working');
+                } else {
+                    console.log('❌ Google OAuth issue');
+                }
+            })
+            .catch(error => {
+                console.log('❌ Backend not running or CORS issue:', error);
+            });
+    </script>
+</body>
+</html>

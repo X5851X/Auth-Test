@@ -22,7 +22,8 @@ export default registerAs(
       password,
       database,
       entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-      synchronize: process.env.NODE_ENV !== 'production',
+      synchronize: true, // Set to true for Railway deployment
+      ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
     };
   },
 );

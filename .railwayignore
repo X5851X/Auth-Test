@@ -1,0 +1,13 @@
+frontend/
+database/
+.git/
+node_modules/
+*.log
+.env.local
+.env.development
+.env.test
+docker-compose.yml
+Dockerfile
+start-docker.*
+test-setup.js
+oauth-check.html
